@@ -1,0 +1,15 @@
+{
+  "name": "ide", 
+  "version": "1.0.0", 
+  "description": "", 
+  "homepage": "", 
+  "tags": [], 
+  "author": "", 
+  "license": "ISC", 
+  "sources": [
+    "https://nyssa.bladelang.org"
+  ], 
+  "deps": {
+    "dotenv": "1.0.0"
+  }
+}

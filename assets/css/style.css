@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+  background: #ff5722;
+  text-align: left;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  padding: .5rem;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.region {
+  background: linen;
+  padding: .25rem;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+.control-panel {
+  text-align: right;
+  font-family: sans-serif;
+  flex-direction: row;
+  align-items: center;
+  justify-content: right;
+}
+
+.heading {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: .9rem;
+  padding: .1rem .5rem;
+  color: #555;
+  text-shadow: 0 1px 0 #e7e7e7;
+}
+
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid rgba(0, 0, 0, .15);
+}
+
+#editor {
+  flex: 1;
+  display: flex;
+}
+
+.input {
+  width: min(20rem, 300px);
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid lightgray;
+  padding: 0;
+}
+
+textarea,
+textarea:focus {
+  /* width: 100%; */
+  height: 100%;
+  border: 0;
+  outline: none;
+  resize: none;
+  padding: .35rem;
+}
+
+.button-container {
+  text-align: right;
+  padding: .25rem;
+  display: inline-flex;
+  flex-direction: row;
+  gap: .5rem;
+}
+
+button {
+  background: white;
+  color: #ff5722;
+  padding: .5rem 1rem;
+  border-radius: .25rem;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, .25);
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: .85rem;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.output {
+  padding: .5rem;
+  min-height: 8rem;
+  display: flex;
+  resize: none;
+  background: white;
+  border-radius: .5rem;
+  margin-top: .25rem;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.output pre {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: auto;
+}
+
+.region:has(.output) {
+  border-top-left-radius: .5rem;
+  /* border-top-right-radius: .5rem; */
+}
+
+.input.region {
+  border-top: 0;
+}
+
+.input textarea {
+  border: 1px solid rgba(0, 0, 0, .15);
+  margin: .25rem;
+  border-radius: .5rem;
+}
+
+.input .heading {
+  padding: .3rem .75rem;
+}
+
+.input .heading.border {
+  border-top: 1px solid rgba(0, 0, 0, .15);
+}
+
+@media (max-width: 748px) {
+  .editor {
+    flex-direction: column;
+  }
+
+  #editor {
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+  }
+
+  .input {
+    width: 100%;
+    border-left: 0;
+  }
+
+  .region:has(.output) {
+    border-radius: 0;
+  }
+}
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blade Playground</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+
+<body>
+  <header>
+    <section>Blade Playground</section>
+  </header>
+  <main>
+    <section class="control-panel region">
+      <section class="button-container">
+        <button id="share">Share</button>
+        <button id="run">Run</button>
+      </section>
+    </section>
+    <section class="editor">
+      <section id="editor"></section>
+      <section class="input region">
+        <div class="heading">Input</div>
+        <textarea id="input"></textarea>
+        <div class="heading">CLI Arguments</div>
+        <textarea id="input"></textarea>
+      </section>
+    </section>
+    <section class="region">
+      <div class="heading">Output</div>
+      <section class="output">
+        <pre id="output"></pre>
+      </section>
+    </section>
+  </main>
+  <footer></footer>
+
+  <script>
+    var DEFAULT_CODE = {{ code }}
+  </script>
+
+  <script src="/assets/js/ace/ace.js"></script>
+  <!-- <script src="/assets/js/ace/mode-blade.js"></script> -->
+  <!-- <script src="/assets/js/ace/theme-github_light_default.js"></script> -->
+  <!-- <script src="/assets/js/ace/theme-xcode.js"></script> -->
+  <!-- <script src="/assets/js/ace/keybinding-vscode.js"></script> -->
+  <script src="/assets/js/ide.js"></script>
+</body>
+
+</html>
