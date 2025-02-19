@@ -18,6 +18,7 @@
 
 # ide
 tmp/
+sandbox/
 runtime/
 .env
 .DS_Store

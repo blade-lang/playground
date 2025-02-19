@@ -6,9 +6,11 @@ import markdown
 
 import dotenv.config
 
-import ..setup {
-  copy_directory
+import .utils {
+  get_file_list
 }
+
+# ----------- PREP SECTION STARTS --------------
 
 var sandbox_root = os.get_env('SANDBOX_ROOT')
 var exe_path = os.real_path(
@@ -21,12 +23,28 @@ var BASE_URL = os.get_env('BASE_URL')
 var MD = markdown()
 
 # initialize base root directory for all program execution
-var base_root = os.real_path(os.join_paths(sandbox_root, 'tmp'))
+var base_root = os.join_paths(sandbox_root, 'sandbox')
 if(!os.dir_exists(base_root)) {
   os.create_dir(base_root)
 }
+base_root = os.real_path(base_root)
 
 var src_dir = os.cwd()
+
+# ------------- PREP SECTION ENDS --------------
+
+def load_demos() {
+  return get_file_list(os.join_paths(
+    os.dir_name(__root__), 'assets', 'demos'
+  )).map(@(fl) {
+    var src = os.base_name(fl)
+
+    return { 
+      name: src.replace('/[.]b$/', '').replace('-', ' '), 
+      src,
+    }
+  })
+}
 
 def compile(data, project) {
   # initialize program execution root directory.
@@ -51,13 +69,28 @@ def compile(data, project) {
     # change working directory
     os.change_dir(root)
 
+    var cli = ''
+    if data.get('cli') {
+      cli = ' '.join(
+        data.cli.split('/\s+/').map(@(x) {
+          # return already quoted string as is...
+          if (x.starts_with('"') and x.ends_with('"')) or 
+            (x.starts_with("'") and x.ends_with("'")) {
+            return x
+          }
+  
+          return json.encode(x)
+        })
+      )
+    }
+
     # generate command
     var cmd = '"${exe_path}" "${index_path}"'
-    if data.input {
-      # cmd += ' <<---HEREDOC---\n' + 
-      # # ensure we do not interpret interpolations at shell level
-      #   data.input.replace('$', '\\$') +
-      # '\n---HEREDOC---'
+    if cli {
+      cmd += ' ${cli}'
+    }
+
+    if data.get('input') {
       cmd = 'echo -e "'+ 
         data.input.replace('\n', '\\n').replace('\r', '\\r').replace('"', '\\"') +
       '" | ${cmd}'
@@ -100,7 +133,11 @@ server.handle('GET', '/p/', @(req, res) {
     file(os.join_paths(os.dir_name(__root__), 'README.md')).read()
   )
 
-  res.render('ide', { code, read_me })
+  res.render('ide', { 
+    code, 
+    read_me,
+    demos: load_demos(),
+  })
 })
 
 server.handle('GET', '/', @(req, res) {
