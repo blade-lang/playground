@@ -1,15 +1,8 @@
-# Blade Playground
+### Blade Playground
 
 A simple and fun playground for tinkering and playing around with the Blade Programming Language
 
-## About the Playground
-
-- **Name:** playground
-- **Version:** 1.0.0
-- **Homepage:** https://github.com/blade-lang/playground
-- **Tags:** playground, blade, ide
-- **Author:** Richard Ore
-- **License:** MIT
+---
 
 The Blade Playground is a web service that runs on bladelang.org's servers. The service receives a Blade program and runs the program inside a sandboxed runtime, then returns the output.
 
@@ -25,5 +18,5 @@ The playground uses the latest stable release of Blade.
 
 The playground service is officially hosted at [play.bladelang.org](https://play.bladelang.org/) but can be hosted anywhere by anybody (in fact, we encourage this as this will help reduce load on the official version). All we ask is that you contact let us know (by raising an issue) so that we can list your project as part of the available playgrounds, and that your service is of benefit to the entire Blade community.
 
-Any requests for content removal should be directed to eqliqandfriends@gmail.com. Please include the URL and the reason for the request.
+Any requests for content removal should be directed to [eqliqandfriends@gmail.com](mailto:eqliqandfriends@gmail.com). Please include the URL and the reason for the request.
 

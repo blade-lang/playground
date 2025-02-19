@@ -2,7 +2,7 @@ import http
 import json
 import hash
 import os
-import thread
+import markdown
 
 import dotenv.config
 
@@ -18,6 +18,7 @@ var exe_path = os.real_path(
   )
 )
 var BASE_URL = os.get_env('BASE_URL')
+var MD = markdown()
 
 # initialize base root directory for all program execution
 var base_root = os.real_path(os.join_paths(sandbox_root, 'tmp'))
@@ -95,7 +96,11 @@ server.handle('GET', '/p/', @(req, res) {
     }
   }
 
-  res.render('ide', { code })
+  var read_me = MD.render(
+    file(os.join_paths(os.dir_name(__root__), 'README.md')).read()
+  )
+
+  res.render('ide', { code, read_me })
 })
 
 server.handle('GET', '/', @(req, res) {
