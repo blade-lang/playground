@@ -17,7 +17,6 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 
   let output = document.getElementById('output')
-  let input = document.getElementById('input')
   let cli = document.getElementById('cli')
   let demo = document.getElementById('demo')
 
@@ -28,7 +27,6 @@ window.addEventListener('DOMContentLoaded', function() {
           method: 'POST',
           body: JSON.stringify({
             code: editor.getSession()?.getValue() || '',
-            input: input?.value?.toString() || null,
             cli: cli?.value?.toString() || null,
           })
         })).json()

@@ -115,6 +115,14 @@ button {
   border: 1px solid rgba(0, 0, 0, .2);
 }
 
+blockquote {
+  background: #faf0e6;
+  margin: 1rem 0;
+  padding: .5rem 1rem;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: .5rem;
+}
+
 .output {
   padding: .5rem;
   height: 12rem;

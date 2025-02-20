@@ -91,12 +91,6 @@ def compile(data, project) {
       cmd += ' ${cli}'
     }
 
-    if data.get('input') {
-      cmd = 'echo -e "'+ 
-        data.input.replace('\n', '\\n').replace('\r', '\\r').replace('"', '\\"') +
-      '" | ${cmd}'
-    }
-
     # redirect stderr to stdout
     cmd += ' 2>&1'
 
