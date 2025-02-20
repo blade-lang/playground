@@ -99,7 +99,7 @@ def putc(c) {
  */
 def getc() {
   var ch = chr(rand(32, 127))
-  putc(ch)
+  # putc(ch)
   return ch
 }
 
@@ -148,6 +148,7 @@ def readline(message, secure, obscure_text) {
     result += chr(rand(32, 127))
   })
 
+  stdout.flush()
   return result
 }
 

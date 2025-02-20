@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', function() {
   editor.getSession()?.setTabSize(2)
 
   if(DEFAULT_CODE.length > 0) {
-    editor.getSession()?.setValue(decodeURIComponent(DEFAULT_CODE), -1)
+    editor.getSession()?.setValue(DEFAULT_CODE, -1)
   }
 
   let output = document.getElementById('output')
@@ -32,13 +32,13 @@ window.addEventListener('DOMContentLoaded', function() {
         })).json()
   
         if(!response.error) {
-          output.innerText = decodeURIComponent(response.data)
+          output.innerText = response.data
         } else {
           alert(response.error)
         }
       } catch(e) {
         // show error...
-        output.innerText = response.error
+        alert(`Playground Error: ${e.message}`)
       }
     })
 
@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded', function() {
           alert('Network or server error. Try again')
         }
       } else if(DEFAULT_CODE) {
-        editor.getSession()?.setValue(decodeURIComponent(DEFAULT_CODE), -1)
+        editor.getSession()?.setValue(DEFAULT_CODE, -1)
       }
     })
   }
