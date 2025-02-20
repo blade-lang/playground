@@ -7,7 +7,8 @@ import markdown
 import dotenv.config
 
 import .utils {
-  get_file_list
+  get_file_list,
+  copy_directory
 }
 
 # ----------- PREP SECTION STARTS --------------
