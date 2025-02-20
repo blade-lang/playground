@@ -33,6 +33,7 @@ class file {
 
     self._mode = mode
     self._path = os.abs_path(path)
+    self._original_path = path
 
     self._max_length = -1
     if self._can_write() {
@@ -254,17 +255,17 @@ class file {
    */
   stats() {
     if !self._file {
-      raise Exception('cannot get stats for non-existing file')
+      raise Exception('No such file or directory')
     }
 
     return {
-      is_readable: self._can_read(),
-      is_writable: self._can_write(),
-      is_executable: self._can_read() and !self._can_write(),
+      is_readable: true,
+      is_writable: true,
+      is_executable: false,
       size: self._source.length(),
       mtime: self._file.mtime,
-      atime: self.__file.atime,
-      ctime: self.__file.ctime,
+      atime: self._file.atime,
+      ctime: self._file.ctime,
       is_symbolic: self._file.is_symbolic,
       mode: self._file.mode,
       dev: self._file.dev,
@@ -286,13 +287,17 @@ class file {
    * @returns bool
    */
   delete() {
-    self._source.dispose()
-    self._do_close()
-    self._source = nil
-    self._max_length = -1
-    self._position = -1
-    ____FILESYSTEM____.remove(self._path)
-    return true
+    if self._file {
+      self._source.dispose()
+      self._do_close()
+      self._source = nil
+      self._max_length = -1
+      self._position = -1
+      ____FILESYSTEM____.remove(self._path)
+      return true
+    }
+
+    return false
   }
 
   /**
@@ -302,8 +307,10 @@ class file {
    */
   rename(new_name) {
     if !self._file {
-      raise Exception('file not found')
+      raise Exception('No such file or directory')
     }
+
+    new_name = self._create_name(new_name)
 
     ____FILESYSTEM____.set(new_name, self._file)
     ____FILESYSTEM____.remove(self._path)
@@ -319,8 +326,10 @@ class file {
    */
   copy(path) {
     if !self._file {
-      raise Exception('file not found')
+      raise Exception('No such file or directory')
     }
+
+    path = self._create_name(path)
 
     catch {
       ____FILESYSTEM____.set(path, self._file.clone())
@@ -344,7 +353,7 @@ class file {
    * @returns string
    */
   path() {
-    return self._path
+    return self._original_path
   }
 
   /**
@@ -365,11 +374,11 @@ class file {
   truncate(length) {
     if !length length = 0
     if !is_number(length) {
-      raise Exception('invalid I/O data truncation length')
+      raise Exception('truncate() expects argument 1 as number, ${typeof(length)} given')
     }
 
-    if !self._file {
-      raise Exception('file not found')
+    if !self.exists() {
+      raise Exception('No such file or directory')
     }
 
     catch {
@@ -394,8 +403,8 @@ class file {
       raise Exception('chmod() expects argument 1 as number, ${typeof(number)} given')
     }
 
-    if !self._file {
-      raise Exception('file not found')
+    if !self.exists() {
+      raise Exception('No such file or directory')
     }
 
     self._file.mode = number
@@ -409,13 +418,13 @@ class file {
    */
   set_times(atime, mtime) {
     if !is_number(atime) {
-      raise Exception('atime must be a number')
+      raise Exception('set_times() expects argument 1 as number, ${typeof(atime)} given')
     } else if !is_number(mtime) {
-      raise Exception('mtime must be a number')
+      raise Exception('set_times() expects argument 1 as number, ${typeof(mtime)} given')
     }
 
-    if !self._file {
-      raise Exception('file not found')
+    if !self.exists() {
+      raise Exception('No such file or directory')
     }
 
     if atime != -1 self._file.atime = atime
@@ -442,8 +451,8 @@ class file {
       raise Exception('invalid seek type')
     }
 
-    if !self._file {
-      raise Exception('file not found')
+    if !self.exists() {
+      raise Exception('No such file or directory')
     }
 
     using seek_type {
@@ -526,7 +535,7 @@ class file {
 
   _read(length) {
     if !self._can_read() {
-      raise Exception('NotFound -> no such file or directory')
+      raise Exception('cannot read from non-readable file: Operation not supported')
     }
 
     var max_readable = self._max_length - self._position
@@ -549,7 +558,7 @@ class file {
 
   _write(data) {
     if !self._can_write() {
-      raise Exception('Unsupported -> cannot write into non-writable file')
+      raise Exception('cannot write into non-writable file: Operation not supported')
     }
 
     if self._max_length - self._position < 0 {
@@ -567,6 +576,24 @@ class file {
     self._file.mtime = time()
 
     return data.length()
+  }
+
+  _create_name(name) {
+    var path = os.real_path(
+      name.starts_with('./') or name.starts_with('../') ?
+        os.join_paths(os.cwd(), name) :
+        name
+    )
+
+    if path == name {
+      path = os.join_paths(os.cwd(), name)
+    }
+    
+    if path != os.abs_path(path) {
+      raise Exception('Permission denied')
+    }
+
+    return path
   }
 }
 

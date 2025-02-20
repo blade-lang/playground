@@ -13,4 +13,7 @@ def fibonacci(n) {
   return current
 }
 
+/**
+ * @note highest fibonacci before infinity is 1476
+ */
 echo fibonacci(60)

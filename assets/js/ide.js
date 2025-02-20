@@ -52,8 +52,10 @@ window.addEventListener('DOMContentLoaded', function() {
             editor.getSession()?.setValue(text, -1)
           }
         } catch(e) {
-          // do nothing...
+          alert('Network or server error. Try again')
         }
+      } else if(DEFAULT_CODE) {
+        editor.getSession()?.setValue(decodeURIComponent(DEFAULT_CODE), -1)
       }
     })
   }

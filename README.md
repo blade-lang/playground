@@ -10,9 +10,9 @@ There are limitations to the programs that can be run in the playground.
 
 The playground can use most of the standard library, with some exceptions:
 
-- The only communication a playground program has to the outside world is by writing to standard output and standard error.
+- The only communication a playground program has to the outside world is by writing to standard output, standard input (via the input area), and standard error.
 - The playground restricts executing commands via `os.exec` and will only return the reponse `Executed` irrespective of whatever command a user runs.
-- The playground restricts working on files and directories outside of the local sandbox running the program.
+- The playground uses a virtual filesystem and does not impact any physical machine. For these reason, files are not store across multiple runs.
 - The program restricts any network call via the `socket` module and in turn the `http` module and will rather return a generic response that will be automatically selected out of a list of dummy responses.
 - The program restricts threads creation to a maximum of 10 per playground.
 
