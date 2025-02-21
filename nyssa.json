@@ -1,11 +1,11 @@
 {
   "name": "playground", 
   "version": "1.0.0", 
-  "description": "", 
-  "homepage": "", 
-  "tags": [], 
-  "author": "", 
-  "license": "ISC", 
+  "description": "A simple and fun playground for tinkering and playing around with the Blade Programming Language", 
+  "homepage": "https://github.com/blade-lang/playground", 
+  "tags": ["playground", "play", "ide"], 
+  "author": "Richard Ore", 
+  "license": "MIT", 
   "sources": [
     "https://nyssa.bladelang.org"
   ], 
