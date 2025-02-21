@@ -623,7 +623,7 @@ class Socket {
    * 
    * @type int
    */
-  var send_timeout = -1
+  var send_timeout = 3000
 
   /**
    * The amount of time in milliseconds that the socket waits before it 
@@ -631,7 +631,7 @@ class Socket {
    * 
    * @type int
    */
-  var receive_timeout = -1
+  var receive_timeout = 3000
 
   /**
    * @param number family
@@ -699,7 +699,7 @@ class Socket {
 
     if self.is_connected raise SocketException('socket has existing connection')
 
-    var result = self._check_error(_socket.connect(self.id, host, port, self.family, timeout, self.is_blocking))
+    var result = self._check_error(_socket.connect(self.id, host, port, self.family, 2000, self.is_blocking))
     if result {
       self.is_client = true
       self.is_connected = true
@@ -729,16 +729,16 @@ class Socket {
 
     if self.id == -1 or self.is_closed raise SocketException('socket is in an illegal state')
 
-
     if self.is_bound raise SocketException('socket previously bound')
 
-    var result = self._check_error(_socket.bind(self.id, host, port, self.family))
+    var result = 0
     if result {
       self.is_bound = true
       self.is_listening = false # it's freshly bound
       self.is_connected = false # a bound socket can't be connected ass well
       self.is_client = false # a bound socket cannot be a client
     }
+
     return result == 0
   }
 
@@ -864,13 +864,8 @@ class Socket {
 
     if !self.is_bound or self.is_listening or self.is_closed 
       raise SocketException('socket is in an illegal state')
-
-    var result = self._check_error(_socket.listen(self.id, queue_length))
-    if result {
-      self.is_listening = true
-    }
-
-    return result == 0
+    
+    return self.is_listening = true
   }
 
   /**
@@ -984,6 +979,9 @@ class Socket {
 
     if option == SO_TYPE or option == SO_ERROR
       raise Exception('the given option is read-only')
+
+    if option == SO_SNDTIMEO value = 3000
+    else if option == SO_RCVTIMEO value = 3000
 
     if !self.is_closed and !self.is_shutdown {
       var result = self._check_error(_socket.setsockopt(self.id, option, value)) >= 0

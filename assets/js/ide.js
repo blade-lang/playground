@@ -17,6 +17,14 @@ window.addEventListener('DOMContentLoaded', function () {
       editor.showKeyboardShortcuts()
   }) */
 
+  // disable the default settings command which will call a non-existing file. 
+  editor.commands.addCommand({
+    name: '...',
+    bindKey: {win: 'Ctrl-,',  mac: 'Command-,'},
+    exec: function(editor) {},
+    readOnly: true, // false if this command should not apply in readOnly mode
+  });
+
   if (DEFAULT_CODE.length > 0) {
     editor.getSession()?.setValue(DEFAULT_CODE, -1)
   }

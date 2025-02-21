@@ -261,7 +261,7 @@ def create_dir(path, permission, recursive) {
   }
 
   
-  var path_split = path.split('/')
+  var path_split = path.rtrim("/").split('/')
   iter var i = 1; i <= path_split.length(); i++ {
     var current_path = '/'.join(path_split[,i])
     if current_path.length() > 0 and !____FILESYSTEM____.get(current_path) {
@@ -570,8 +570,6 @@ def _real_path(path, as_is) {
           return path_clone
         }
       }
-
-      echo 'Got here... with ' + "/".join(path_split)
       
       # path_split is a subset of root_path
       return choose_result("/".join(path_split) or '/')

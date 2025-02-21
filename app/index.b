@@ -3,6 +3,7 @@ import json
 import hash
 import os
 import markdown
+import thread
 
 import dotenv.config
 
@@ -146,16 +147,18 @@ server.handle('POST', '/run', @(req, res) {
       res.json({ error: 'Unauthorized' })
       return
     }
-
+    
     var session_id = referer[BASE_URL.length() + 3,]
     var data = json.decode(req.body.to_string())
-
+    
     res.json({
       data: data.code ? compile(data, session_id) : ''
     })
   } as error
 
   if error {
+    echo error.message
+    echo error.stacktrace
     res.json({ error: error.message })
   }
 })
