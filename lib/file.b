@@ -53,7 +53,7 @@ class file {
           blksize: 4096,
   
           # +3 for stdout, stdin, and stderr
-          number: rand(0, ____FILESYSTEM____.length() + 3),
+          number: ____FILESYSTEM____.length() + 3,
         })
       }
 
@@ -340,6 +340,8 @@ class file {
         )
       )
 
+      ____FILESYSTEM____[path].number = ____FILESYSTEM____.length() + 3
+
       return true
     }
 
@@ -497,9 +499,9 @@ class file {
 
     return self.exists() and self._open and 
       to_bool(
-        self._mode.index_of('r') or 
-        self._mode.index_of('+') or 
-        self._mode.index_of('a')
+        self._mode.index_of('r') > -1 or 
+        self._mode.index_of('+') > -1 or 
+        self._mode.index_of('a') > -1
       )
   }
 
@@ -510,15 +512,15 @@ class file {
     }
 
     return self._open and to_bool(
-      self._mode.index_of('w') or 
-      self._mode.index_of('+') or 
-      self._mode.index_of('a')
+      self._mode.index_of('w') > -1 or 
+      self._mode.index_of('+') > -1 or 
+      self._mode.index_of('a') > -1
     )
   }
 
   _should_append() {
-    return self._mode.index_of('+') or 
-      self._mode.index_of('a')
+    return self._mode.index_of('+') > -1 or 
+      self._mode.index_of('a') > -1
   }
 
   _do_open() {

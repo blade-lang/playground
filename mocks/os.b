@@ -293,8 +293,13 @@ def create_dir(path, permission, recursive) {
  * @returns List[string]
  */
 def read_dir(path) {
-  if !____FILESYSTEM____.get(path) {
+  path = real_path(path)
+  var this_path = ____FILESYSTEM____.get(path)
+  
+  if !this_path {
     raise Exception('No such file or directory')
+  } else if this_path != true and this_path != 0x10 {
+    raise Exception('No such directory')
   }
   
   return ____FILESYSTEM____.keys().filter(@(x) {
@@ -314,7 +319,7 @@ def read_dir(path) {
  * @returns boolean
  */
 def chmod(path, mode) {
-  if !____FILESYSTEM____.get(path) {
+  if !____FILESYSTEM____.get(real_path(path)) {
     raise Exception('No such file or directory')
   }
   
@@ -328,7 +333,8 @@ def chmod(path, mode) {
  * @returns bool
  */
 def is_dir(path) {
-  return ____FILESYSTEM____.get(path) == true
+  var tmp = ____FILESYSTEM____.get(real_path(path))
+  return tmp == true or tmp == 0x10
 }
 
 /**
@@ -347,10 +353,18 @@ def remove_dir(path, recursive) {
     recursive = false
   }
 
-  var path_split = path.split('/')
-  iter var i = 1; i <= path_split.length(); i++ {
-    var current_path = '/'.join(path_split[,i])
-    ____FILESYSTEM____.remove(current_path)
+  path = _real_path(path, true)
+  var this_path = ____FILESYSTEM____.get(path)
+  if !this_path or !(this_path == true or this_path == 0x10) {
+    return false
+  }
+
+  for key, value in ____FILESYSTEM____ {
+    if key.starts_with(path) {
+      if recursive or (value != true and value != 0x10 and dir_name(key) == path) {
+        ____FILESYSTEM____.remove(key)
+      }
+    }
   }
 
   return true
@@ -378,6 +392,8 @@ def cwd() {
  * @returns bool
  */
 def change_dir(path) {
+  path = _real_path(path, true)
+
   if ____FILESYSTEM____.contains(path) and ____FILESYSTEM____.get(path) == true {
     for key, value in ____FILESYSTEM____ {
       if value == 0x10 or value == true {
@@ -399,7 +415,7 @@ def change_dir(path) {
  * @returns bool
  */
 def dir_exists(path) {
-  var record = ____FILESYSTEM____.get(path)
+  var record = ____FILESYSTEM____.get(_real_path(path, true))
   return record == true or record == 0x10
 }
 
@@ -448,17 +464,7 @@ def join_paths(...) {
   return result
 }
 
-/**
- * Returns the original path to a relative path.
- * 
- * @note if the path is a file, see `abs_path()`.
- * @param string path
- * @returns string
- */
-def real_path(path) {
-  if !is_string(path)
-    raise Exception('string expected, ${typeof(path)} given')
-    
+def _real_path(path, as_is) {
   # if path was originally empty, return as is
   if path == '' {
     return path
@@ -478,7 +484,7 @@ def real_path(path) {
   var path_clone = path[,]
   
   def choose_result(result) {
-    if ____FILESYSTEM____.contains(result) {
+    if as_is or ____FILESYSTEM____.contains(result) {
       return result.rtrim('/')
     } else {
       return path_clone
@@ -554,11 +560,18 @@ def real_path(path) {
     # if the entire navigation has happened within path_split itself without,
     # all we have to do now is find path_split within root_path directly
     if path_split.index_of('', 1) == -1 {
-      iter var i = 0; i < path_split.length(); i++ {
+      var check_length = path_split.length()
+      iter var i = 0; i < check_length; i++ {
+        if i > root_path_split.length() - 1 {
+          break
+        }
+
         if path_split[i] != root_path_split[i] {
           return path_clone
         }
       }
+
+      echo 'Got here... with ' + "/".join(path_split)
       
       # path_split is a subset of root_path
       return choose_result("/".join(path_split) or '/')
@@ -576,6 +589,20 @@ def real_path(path) {
 /**
  * Returns the original path to a relative path.
  * 
+ * @note if the path is a file, see `abs_path()`.
+ * @param string path
+ * @returns string
+ */
+def real_path(path) {
+  if !is_string(path)
+    raise Exception('string expected, ${typeof(path)} given')
+    
+  return _real_path(path, false)
+}
+
+/**
+ * Returns the original path to a relative path.
+ * 
  * @note unlike real_path(), this function returns full path for a file.
  * @param string path
  * @returns string
@@ -587,9 +614,9 @@ def abs_path(path) {
   if path.match(regex)
     return path
 
-  var p = real_path(path)
+  var p = _real_path(path, true)
   if p == path {
-    var np = real_path('.')
+    var np = _real_path('.', true)
 
     if np != path {
       p = join_paths(np, p)

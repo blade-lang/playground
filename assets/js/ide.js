@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
   let editor = ace.edit('editor', {
     mode: 'ace/mode/blade',
     navigateWithinSoftTabs: true,
@@ -12,7 +12,12 @@ window.addEventListener('DOMContentLoaded', function() {
   editor.getSession()?.setUseSoftTabs(true)
   editor.getSession()?.setTabSize(2)
 
-  if(DEFAULT_CODE.length > 0) {
+  /* ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
+      module.init(editor);
+      editor.showKeyboardShortcuts()
+  }) */
+
+  if (DEFAULT_CODE.length > 0) {
     editor.getSession()?.setValue(DEFAULT_CODE, -1)
   }
 
@@ -20,8 +25,8 @@ window.addEventListener('DOMContentLoaded', function() {
   let cli = document.getElementById('cli')
   let demo = document.getElementById('demo')
 
-  if(output) {
-    document.getElementById('run')?.addEventListener('click', async function() {
+  if (output) {
+    document.getElementById('run')?.addEventListener('click', async function () {
       try {
         const response = await (await fetch('/run', {
           method: 'POST',
@@ -30,29 +35,29 @@ window.addEventListener('DOMContentLoaded', function() {
             cli: cli?.value?.toString() || null,
           })
         })).json()
-  
-        if(!response.error) {
+
+        if (!response.error) {
           output.innerText = response.data
         } else {
           alert(response.error)
         }
-      } catch(e) {
+      } catch (e) {
         // show error...
         alert(`Playground Error: ${e.message}`)
       }
     })
 
     demo?.addEventListener('change', async function () {
-      if(demo.value.length > 0) {
+      if (demo.value.length > 0) {
         try {
           let text = await (await fetch(`/assets/demos/${demo.value}`)).text()
-          if(text) {
+          if (text) {
             editor.getSession()?.setValue(text, -1)
           }
-        } catch(e) {
+        } catch (e) {
           alert('Network or server error. Try again')
         }
-      } else if(DEFAULT_CODE) {
+      } else if (DEFAULT_CODE) {
         editor.getSession()?.setValue(DEFAULT_CODE, -1)
       }
     })
