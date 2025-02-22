@@ -38,16 +38,18 @@ def mock_libs() {
 }
 
 def update_lib_for_existing_projects() {
-  for fl in os.read_dir(Config.SandboxRoot).filter(@(x){
-    return x != '.' and x != '..' and
-      os.dir_exists(os.join_paths(Config.SandboxRoot, x))
-  }) {
-    var dest_dir = os.join_paths(Config.SandboxRoot, fl)
-    
-    copy_directory(
-      os.join_paths(os.dir_name(__file__), 'lib'),
-      dest_dir
-    )
+  if os.dir_exists(Config.SandboxRoot) {
+    for fl in os.read_dir(Config.SandboxRoot).filter(@(x){
+      return x != '.' and x != '..' and
+        os.dir_exists(os.join_paths(Config.SandboxRoot, x))
+    }) {
+      var dest_dir = os.join_paths(Config.SandboxRoot, fl)
+      
+      copy_directory(
+        os.join_paths(os.dir_name(__file__), 'lib'),
+        dest_dir
+      )
+    }
   }
 }
 
