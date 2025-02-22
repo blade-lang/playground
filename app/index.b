@@ -151,9 +151,10 @@ server.handle('POST', '/run', @(req, res) {
     var session_id = referer[BASE_URL.length() + 3,]
     var data = json.decode(req.body.to_string())
     
-    res.json({
-      data: data.code ? compile(data, session_id) : ''
-    })
+    data = data.code ? compile(data, session_id) : ''
+    res.json({ data })
+
+    echo data
   } as error
 
   if error {
