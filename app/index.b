@@ -110,7 +110,7 @@ def compile(data, project) {
   return result.trim()
 }
 
-var server = http.server(to_number(os.get_env('PORT', 16000)))
+var server = http.server(to_number(os.get_env('PORT') or 16000))
 
 server.serve_files('/assets/', './assets')
 
