@@ -154,7 +154,7 @@ server.handle('POST', '/run', @(req, res) {
     data = data.code ? compile(data, session_id) : ''
     res.json({ data })
 
-    # echo data
+    # echo json.encode(data)
   } as error
 
   if error {
