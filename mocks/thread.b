@@ -295,7 +295,7 @@ class Thread {
     args = args[0,self._delegate_arity]
 
     self._ptr = rand(1, 11111111) // 1
-    reflect.callcall_function(self._delegate, args)
+    reflect.call_function(self._delegate, args)
     self._started = true
   }
 

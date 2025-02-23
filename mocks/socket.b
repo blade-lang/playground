@@ -865,7 +865,7 @@ class Socket {
     if !self.is_bound or self.is_listening or self.is_closed 
       raise SocketException('socket is in an illegal state')
     
-    return self.is_listening = true
+    return self.is_listening = false
   }
 
   /**
