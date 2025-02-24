@@ -16,6 +16,7 @@ The playground can use most of the standard library, with some exceptions:
 - The playground restricts executing commands via `os.exec` and will only return the reponse `Executed` irrespective of whatever command a user runs.
 - The program restricts the `socket` module ability to bind, accept, and listen and this in turn affects the `http` server module. Also, the socket timeouts cannot be overriden in the playground as all network connections have a total timeout of 3 seconds.
 - In the playground, `thread.start()` runs the thread function in the foreground and does not use any real threads.
+- Programs have a default allocated maximum running time of 5 seconds on the official playground. Other hosted versions of the playgrounds may differ.
 
 The playground uses the latest stable release of Blade.
 

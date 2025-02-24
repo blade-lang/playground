@@ -22,6 +22,7 @@ var exe_path = os.real_path(
   )
 )
 var BASE_URL = os.get_env('BASE_URL')
+var MAX_EXECUTION_TIME = os.get_env('MAX_EXECUTION_TIME') or 5
 var MD = markdown()
 
 # initialize base root directory for all program execution
@@ -87,7 +88,7 @@ def compile(data, project) {
     }
 
     # generate command
-    var cmd = '"${exe_path}" "${index_path}"'
+    var cmd = 'timeout ${MAX_EXECUTION_TIME} "${exe_path}" "${index_path}"'
     if cli {
       cmd += ' ${cli}'
     }
