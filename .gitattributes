@@ -1,2 +1,3 @@
 *.b linguist-detectable
 *.b linguist-language=Blade
+assets/js/ace/* linguist-vendored
